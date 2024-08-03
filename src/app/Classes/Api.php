@@ -8,7 +8,7 @@ class Api
 {
     use functions;
 
-    protected static string $dynamicApiKey = null;
+    protected static ?string $dynamicApiKey = null;
 
     protected string $apiKey, $url;
 
