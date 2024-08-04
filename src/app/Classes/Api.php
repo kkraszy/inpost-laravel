@@ -26,11 +26,11 @@ class Api
 
     public function __construct()
     {
-        $this->sandbox = (self::$sandbox === null) ? config('inPost.sandbox') : self::$sandbox;
+        $sandbox = (self::$sandbox === null) ? config('inPost.sandbox') : self::$sandbox;
 
         // set api key from config or dynamic
         $this->apiKey = self::$dynamicApiKey ?? config('inPost.api_key');
-        $this->url =  $this->sandbox ? config('inPost.sandbox_url') : config('inPost.api_url');
+        $this->url =  $sandbox ? config('inPost.sandbox_url') : config('inPost.api_url');
 
         // check if api key is set
         if (is_null($this->apiKey)) {
