@@ -7,6 +7,10 @@ class InPost
     public static function setApiKey(string $apiKey): void {
         Api::setApiKey($apiKey);
     }
+
+    public static function setSandbox(bool $sandbox = true): void {
+        Api::setSandbox($sandbox);
+    }
     
     public static function services(): Services {
         return new Services();
