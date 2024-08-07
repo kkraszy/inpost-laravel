@@ -16,6 +16,11 @@ class InPost
         return new Services();
     }
 
+    public static function sendingMethods(): SendingMethods
+    {
+        return new SendingMethods();
+    }
+
     public static function organizations(): Organizations {
         return new Organizations();
     }
