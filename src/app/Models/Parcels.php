@@ -9,9 +9,9 @@ class Parcels
     private array $parcels;
 
     /**
-     * @param Parcel ...$parcels
+     * @param Parcel|LockerParcel ...$parcels
      */
-    public function __construct(Parcel ...$parcels)
+    public function __construct(...$parcels)
     {
         $this->parcels = $parcels;
     }
