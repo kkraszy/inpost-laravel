@@ -7,7 +7,7 @@ class Receiver
     private string $name, $company_name, $first_name, $last_name, $phone, $email;
     private Address $address;
 
-    public function __construct(string $name, string $company_name, string $first_name, string $last_name, string $email, string $phone, Address $address)
+    public function __construct(string $name, string $company_name, string $first_name, string $last_name, string $email, string $phone, ?Address $address)
     {
         $this->name = $name;
         $this->company_name = $company_name;
@@ -32,7 +32,7 @@ class Receiver
             'last_name' => $this->last_name,
             'email' => $this->email,
             'phone' => $this->phone,
-            'address' => $this->address->toArray(),
+            ...($this->address ? ['address' => $this->address] : []),
         ];
     }
 }
