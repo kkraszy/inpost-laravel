@@ -212,7 +212,23 @@ class Shipment extends Api
             'only_choice_of_offer' => $this->only_choice_of_offer,
         ];
 
-        $response = Http::withHeaders($this->requestHeaders())->post($this->url.$route, $data);
+        $response = Http::withHeaders($this->requestHeaders())->post($this->url . $route, $data);
+
+        return $returnJson ? $response->body() : json_decode($response->body(), true);
+    }
+
+    /**
+     * Get shipment data by id.
+     *
+     * @param int $id
+     * @param bool $returnJson
+     * @return string|array
+     */
+    public function get(int $id, bool $returnJson = false)
+    {
+        $route = "/v1/shipments/$id";
+
+        $response = Http::withHeaders($this->requestHeaders())->get($this->url . $route);
 
         return $returnJson ? $response->body() : json_decode($response->body(), true);
     }
@@ -228,7 +244,7 @@ class Shipment extends Api
     {
         $route = "/v1/shipments/$id";
 
-        $response = Http::withHeaders($this->requestHeaders())->delete($this->url.$route);
+        $response = Http::withHeaders($this->requestHeaders())->delete($this->url . $route);
 
         return $returnJson ? $response->body() : json_decode($response->body(), true);
     }
@@ -242,7 +258,7 @@ class Shipment extends Api
      * @return Response|mixed
      * @throws BindingResolutionException
      */
-    public function label(int $id, string $format = 'pdf', string $type = 'normal')
+    public function label(int $id, string $format = 'pdf', string $type = 'normal', bool $download = false)
     {
         $route = "/v1/shipments/$id/label";
 
@@ -251,12 +267,19 @@ class Shipment extends Api
             'type' => $type,
         ];
 
-        $response = Http::withHeaders($this->requestHeaders())->get($this->url.$route, $data);
+        $response = Http::withHeaders($this->requestHeaders())->get($this->url . $route, $data);
 
-        return response()->make($response->getBody()->getContents(), 200, [
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="label-' . $id . '.pdf"'
-        ]);
+        switch ($format) {
+            case 'pdf':
+                if($download) {
+                    return response()->make($response->getBody()->getContents(), 200, [
+                        'Content-Type' => 'application/pdf',
+                        'Content-Disposition' => 'attachment; filename="label-' . $id . '.pdf"'
+                    ]);
+                }
+            default:
+                return $response->getBody()->getContents();
+        }
     }
 
     /**
@@ -275,7 +298,7 @@ class Shipment extends Api
      */
     private function validateReceiver(): void
     {
-        if(empty($this->receiver))
+        if (empty($this->receiver))
             throw new InvalidArgumentException('Receiver is not set.');
     }
 
@@ -284,7 +307,7 @@ class Shipment extends Api
      */
     private function validateParcels(): void
     {
-        if(empty($this->parcels))
+        if (empty($this->parcels))
             throw new InvalidArgumentException('Parcels is not set.');
     }
 
@@ -293,7 +316,7 @@ class Shipment extends Api
      */
     private function validateOrganizationId(): void
     {
-        if(!$this->organizationId)
+        if (!$this->organizationId)
             throw new InvalidArgumentException('Organization id is not set.');
     }
 
@@ -302,7 +325,7 @@ class Shipment extends Api
      */
     private function validateService(): void
     {
-        if(empty($this->service))
+        if (empty($this->service))
             throw new InvalidArgumentException('Service is not set.');
     }
 
@@ -311,11 +334,9 @@ class Shipment extends Api
      */
     private function validateAdditionalServices(array $additional_services): void
     {
-        if(!empty($additional_services))
-        {
-            foreach($additional_services as $service)
-            {
-                if(!is_string($service))
+        if (!empty($additional_services)) {
+            foreach ($additional_services as $service) {
+                if (!is_string($service))
                     throw new InvalidArgumentException("Invalid additional service: $service");
             }
         }
@@ -326,13 +347,13 @@ class Shipment extends Api
      */
     private function validateReference(?string $reference): void
     {
-        if(empty($reference))
+        if (empty($reference))
             return;
 
-        if(strlen($reference) < 3)
+        if (strlen($reference) < 3)
             throw new InvalidArgumentException("Invalid reference: $reference. Reference minimum length is 3");
 
-        if(strlen($reference) > 100)
+        if (strlen($reference) > 100)
             throw new InvalidArgumentException("Invalid reference: $reference. Reference maximum length is 100");
     }
 
@@ -341,10 +362,10 @@ class Shipment extends Api
      */
     private function validateComments(?string $comments): void
     {
-        if(empty($comments))
+        if (empty($comments))
             return;
 
-        if(strlen($comments) > 100)
+        if (strlen($comments) > 100)
             throw new InvalidArgumentException("Invalid comments: $comments. Comments maximum length is 100");
     }
 }
