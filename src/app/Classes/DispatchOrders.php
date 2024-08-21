@@ -168,6 +168,22 @@ class DispatchOrders extends Api
     }
 
     /**
+     * Get dispatch orders details.
+     *
+     * @param int $id
+     * @param bool $returnJson
+     * @return string|array
+     */
+    public function printout(int $id, bool $returnJson = false)
+    {
+        $route = "/v1/dispatch_orders/$id/printout";
+
+        $response = Http::withHeaders($this->requestHeaders())->get($this->url.$route);
+
+        return $returnJson ? $response->body() : json_decode($response->body(), true);
+    }
+
+    /**
      * Add comment to dispatch orders.
      *
      * @param int $dispatch_order_id
