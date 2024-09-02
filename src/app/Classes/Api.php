@@ -29,7 +29,7 @@ class Api
         $sandbox = (self::$sandbox === null) ? config('inPost.sandbox') : self::$sandbox;
 
         // set api key from config or dynamic
-        $this->apiKey = self::$dynamicApiKey ?? config('inPost.api_key');
+        $this->apiKey = (self::$dynamicApiKey === null) ?? config('inPost.api_key');
         $this->url =  $sandbox ? config('inPost.sandbox_url') : config('inPost.api_url');
 
         // check if api key is set

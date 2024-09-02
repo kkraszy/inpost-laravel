@@ -32,7 +32,7 @@ class Receiver
             'last_name' => $this->last_name,
             'email' => $this->email,
             'phone' => $this->phone,
-            ...($this->address ? ['address' => $this->address] : []),
+            ...($this->address ? ['address' => $this->address->toArray()] : []),
         ];
     }
 }
