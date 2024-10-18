@@ -17,14 +17,22 @@ class Parcels
     }
 
     /**
+     * @param Parcel|LockerParcel $parcel
+     */
+    public function addParcel($parcel): void
+    {
+        $this->parcels[] = $parcel;
+    }
+
+    /**
      * Validate parcels.
      */
     private function validateParcels(): void
     {
-        if(count($this->parcels) === 0)
+        if (count($this->parcels) === 0)
             throw new InvalidArgumentException('No parcels provided');
 
-        if(count($this->parcels) > 1000)
+        if (count($this->parcels) > 1000)
             throw new InvalidArgumentException('Maximum 1000 parcels allowed');
     }
 
@@ -37,7 +45,7 @@ class Parcels
     {
         $result = [];
 
-        foreach($this->parcels as $parcel)
+        foreach ($this->parcels as $parcel)
             $result[] = $parcel->toArray();
 
         return $result;
